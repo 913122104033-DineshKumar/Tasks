@@ -458,7 +458,7 @@ public class Patterns {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter the number of line: ");
         int n = scanner.nextInt();
-        numberPattern9(n);
+        numberPattern8(n);
     }
 
 }

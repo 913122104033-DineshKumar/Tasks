@@ -9,10 +9,9 @@ public class Main {
         List<Products> products = Products.addProducts();
         boolean isTrue = true;
         Map<Products, Integer> selectedProducts = new HashMap<>();
-        while (isTrue) {
+       while (isTrue) {
             System.out.println("Enter Option 1 for purchasing Products...");
             System.out.println("Enter Option 2 for Calculate Total Price and Generate Invoice...");
-            System.out.println("Enter Option 3 for purchasing Products");
             int option = scanner.nextInt();
             scanner.nextLine();
             switch (option) {
