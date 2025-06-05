@@ -407,11 +407,58 @@ public class Patterns {
         }
     }
 
+    private static void numberPattern8 (int n) {
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                System.out.printf("%5s", "(" + (i + j) % n + ", " + j +")" + " ");
+            }
+            System.out.println();
+        }
+    }
+
+    private static void numberPattern9 (int n) {
+        int num = 1;
+        for (int i = 1; i <= (n / 2) + 1; i++) {
+            for (int j = 1; j <= i; j++) {
+                System.out.printf("%4s", num++ + " ");
+            }
+            System.out.println();
+        }
+        for (int i = (n / 2) + 2; i <= n; i++) {
+            for (int j = 1; j <= n - i + 1; j++) {
+                System.out.printf("%4s", num++ + " ");
+            }
+            System.out.println();
+        }
+    }
+
+    private static void numberPattern10 (int n) {
+        int num = 1;
+        for (int i = 1; i <= (n / 2) + 1; i++) {
+            int start = i;
+            int gap = n - 1;
+            for (int j = 1; j <= i; j++) {
+                System.out.printf("%4s", start + " ");
+                start += gap--;
+            }
+            System.out.println();
+        }
+        for (int i = (n / 2) + 2; i <= n; i++) {
+            int start = i;
+            int gap = n - 1;
+            for (int j = 1; j <= n - i + 1; j++) {
+                System.out.printf("%4s", start + " ");
+                start += gap--;
+            }
+            System.out.println();
+        }
+    }
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter the number of line: ");
         int n = scanner.nextInt();
-        numberPattern7(n);
+        numberPattern9(n);
     }
 
 }
