@@ -96,40 +96,190 @@ public class Arrays {
         return ans;
     }
 
-    private static boolean isVowel (char ch) {
-        return ch == 'a' || ch == 'e' || ch == 'i' || ch == 'o' || ch == 'u';
+    private static long reverse (long n, int gap) {
+        long num = n;
+        long ans = 0;
+        while (gap > 0) {
+            long rem = num % 10;
+            ans = (ans * 10) + rem;
+            num /= 10;
+            gap--;
+        }
+        return ans;
     }
 
-    private static String longestConsantsSubstring (String s) {
-        int n = s.length();
-        int start = 0, prev = 0;
-        int maxLen = 0;
-        for (int ind = 0; ind < n; ind++) {
-            char c = s.charAt(ind);
-            if (isVowel(c)) {
-                int windowSize = ind - (prev + 1);
-                if (windowSize > maxLen) {
-                    maxLen = windowSize;
-                    start = prev + 1;
-                    prev = ind;
+    private static long rightRotate (long n, int rotations) {
+        int cnt = 0;
+        long num = n;
+        while (num != 0) {
+            cnt++;
+            num /= 10;
+        }
+        long reverse = reverse(n, cnt);
+        long rightPart = reverse(reverse, rotations);
+        long leftPart =  reverse;
+        int gap = rotations;
+        while (gap > 0) {
+            leftPart /= 10;
+            gap--;
+        }
+        leftPart = reverse(leftPart, (cnt - rotations) + 1);
+        return (leftPart * 10) + rightPart;
+    }
+
+    private static void leftRotate (long n, int rotations) {
+        int cnt = 0;
+        long num = n;
+        while (num != 0) {
+            num /= 10;
+            cnt++;
+        }
+        num = n;
+        int gap = rotations;
+        long leftPart = 0;
+        while (gap > 0) {
+            long rem = num % 10;
+            leftPart = (leftPart * 10) + rem;
+            num /= 10;
+            gap--;
+        }
+        gap = cnt - rotations;
+        long rightPart = 0;
+        while (gap > 0) {
+            long rem = num % 10;
+            rightPart = (rightPart * 10) + rem;
+            num /= 10;
+            gap--;
+        }
+    }
+
+    private static void swap (int i, int j, int[] nums) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+
+    private static int[] swapOdd (int[] nums) {
+        int n = nums.length;
+        int start = 0;
+        int end = n - 1;
+        while (start < end) {
+            if (nums[start] % 2 == 1 && nums[end] % 2 == 1) {
+                swap(start, end, nums);
+            }
+            if (nums[start] % 2 == 0) {
+                start++;
+            }
+            if (nums[end] % 2 == 0) {
+                end--;
+            }
+        }
+        return nums;
+    }
+
+    private static int[] alternateSort (int[] nums) {
+        int n = nums.length;
+        int left = 0, right = n - 1;
+        for (int i = 0; i < n; i++) {
+            int minInd = left;
+            int min = nums[left];
+            for (int j = left; j <= right; j++) {
+                if (min > nums[j]) {
+                    min = nums[j];
+                    minInd = j;
+                }
+            }
+            if (left != minInd) {
+                if (i % 2 == 0) {
+                    swap(left, minInd, nums);
+                    left++;
+                } else {
+                    swap(right, minInd, nums);
+                    right--;
                 }
             }
         }
-        return s.substring(start, Math.min(n, start + maxLen));
+        return nums;
+    }
+
+    private static boolean isBlock (int element, int[] block) {
+        for (int i = 0; i < 3; i++) {
+            if (element == block[i]) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static int[] frequentElements (int[] nums) {
+        int n = nums.length;
+        int[][] freq = new int[n][2];
+        for (int num : nums) {
+            putInFreq(freq, num);
+        }
+        int k = 3;
+        int[] ans = new int[k];
+        int ind = 0;
+        while (k-- > 0) {
+            int max = freq[ind][1];
+            int element = freq[ind][0];
+            for (int i = 1; i < n; i++) {
+                if (max < freq[i][1] && !isBlock(element, ans)) {
+                    max = freq[i][1];
+                    element = freq[i][0];
+                }
+            }
+            ans[ind++] = element;
+        }
+        return ans;
+    }
+
+    private static void putInFreq(int[][] freq, int num) {
+        for (int i = 0; i < freq.length; i++) {
+            if (freq[i][0] == num) {
+                freq[i][1] += 1;
+                break;
+            } else if (freq[i][0] == 0) {
+                freq[i][0] = num;
+                freq[i][1] = 1;
+                break;
+            }
+        }
+    }
+
+    private static void sort (int[] nums) {
+        int n = nums.length;
+        for (int i = 0; i < n - 1; i += 2) {
+            int max = nums[i];
+            int maxInd = i;
+            int min = nums[i];
+            int minInd = i;
+            for (int j = i + 1; j < n; j++) {
+                if (nums[j] > max){
+                    max = nums[j];
+                    maxInd = j;
+                }
+                if (nums[j] < min) {
+                    min = nums[j];
+                    minInd = j;
+                }
+            }
+            swap(i, maxInd, nums);
+            swap(i + 1, minInd, nums);
+        }
+        for (int num : nums) {
+            System.out.print(num + " ");
+        }
     }
 
     public static void main (String[] args) {
         Scanner scanner = new Scanner(System.in);
-        String s = scanner.next();
-        System.out.println(longestConsantsSubstring(s));
-//        System.out.println("Enter Array size: ");
 //        int n = scanner.nextInt();
 //        int[] nums = new int[n];
-//        System.out.println("Enter Array Elements: ");
 //        for (int i = 0; i < n; i++) {
 //            nums[i] = scanner.nextInt();
 //        }
-//        int[] ans = nge(nums);
+//        int[] ans = frequentElements(nums);
 //        for (int num : ans) {
 //            System.out.print(num + " ");
 //        }

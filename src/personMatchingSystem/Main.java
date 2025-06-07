@@ -4,7 +4,7 @@ import java.util.*;
 
 public class Main {
 
-    private static Map<String, Person> family;
+    public static Map<String, Person> family;
 
     public static void buildRelation (String name, String gender, String fatherName, String motherName) {
         Person father, mother;
@@ -30,17 +30,29 @@ public class Main {
             family.put(name, person);
         }
         if (gender.equals("Male")) {
+            for (Person son : father.sons) {
+                son.brothers.add(person);
+            }
+            for (Person daughter : father.daughters) {
+                daughter.brothers.add(person);
+            }
             father.sons.add(person);
             mother.sons.add(person);
         } else {
+            for (Person son : father.sons) {
+                son.sisters.add(person);
+            }
+            for (Person daughter : father.daughters) {
+                daughter.sisters.add(person);
+            }
             father.daughters.add(person);
             mother.daughters.add(person);
         }
     }
 
-    private static void printMaternalCousins (Person person) {
-        for (Person maternalCousin : person.getMaternalCousins()) {
-            System.out.print(maternalCousin.getName() + ", ");
+    private static void printMaternalCousins (List<Person> maternalCousins) {
+        for (Person maternalCousin : maternalCousins) {
+            System.out.println(maternalCousin.getName());
         }
     }
 
@@ -69,8 +81,7 @@ public class Main {
                 case 2:
                     System.out.println("Enter the Your Name: ");
                     name = scanner.next();
-                    family.get(name).maternalCousins = Person.findMaternalCousins(family.get(name));
-                    printMaternalCousins(family.get(name));
+                    printMaternalCousins(Person.findMaternalCousins(family.get(name)));
                     break;
                 case 3:
                     isRunning = false;

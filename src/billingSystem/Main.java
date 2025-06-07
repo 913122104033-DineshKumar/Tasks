@@ -1,5 +1,4 @@
-import utils.CalculateTotal;
-import utils.Products;
+package billingSystem;
 
 import java.util.*;
 

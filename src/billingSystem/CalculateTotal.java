@@ -1,4 +1,4 @@
-package utils;
+package billingSystem;
 import java.util.Map;
 
 public class CalculateTotal {
