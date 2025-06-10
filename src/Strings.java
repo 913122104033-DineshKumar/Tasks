@@ -91,7 +91,7 @@ public class Strings {
             }
         }
         int needToFill = space - s.length();
-        int neededGaps = gap * (needToFill / gap) + (needToFill % gap);
+        int neededGaps = (needToFill / gap) + (needToFill % gap);
         for (int i = 0; i < s.length(); i++) {
             char c = s.charAt(i);
             if (c == ' ' && neededGaps > 0) {
@@ -127,7 +127,6 @@ public class Strings {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         String sentence = scanner.nextLine();
-        System.out.println(sentencePalindrome(sentence));
     }
 
 }

@@ -3,6 +3,53 @@ import java.util.Stack;
 
 public class Arrays {
 
+    private static  void mergeSort (int low, int high, int[] nums) {
+        if (low >= high) {
+            return;
+        }
+        int mid = low + (high - low) / 2;
+        mergeSort(low, mid, nums);
+        mergeSort(mid + 1, high, nums);
+        merge(low, mid, high, nums);
+    }
+
+    private static void merge (int low, int mid, int high, int[] nums) {
+        int[] leftNums = new int[mid - low + 1];
+        int[] rightNums = new int[high - mid + 1];
+        for (int ind = 0; ind < leftNums.length; ind++) {
+            leftNums[ind] = nums[low + ind];
+        }
+        for (int ind = 0; ind < rightNums.length; ind++) {
+            rightNums[ind] = nums[mid + ind + 1];
+        }
+        int ind1 = 0, ind2 = 0, ind = low;
+        while (ind1 < leftNums.length && ind2 < rightNums.length) {
+            if (leftNums[ind1] <= rightNums[ind2]) {
+                nums[ind++] = leftNums[ind1++];
+            } else {
+                nums[ind++] = rightNums[ind2++];
+            }
+        }
+        while (ind1 < leftNums.length) {
+            nums[ind++] = leftNums[ind1++];
+        }
+        while (ind2 < rightNums.length) {
+            nums[ind++] = rightNums[ind2++];
+        }
+    }
+
+    private static int pivotElement (int[] nums) {
+        int n = nums.length;
+        int[] sortedNums = nums.clone();
+        mergeSort(0, n - 1, sortedNums);
+        for (int ind = 0; ind < n; ind++) {
+            if (nums[ind] == sortedNums[ind]) {
+                return nums[ind];
+            }
+        }
+        return -1;
+    }
+
     private static void reverse (int[] nums, int s, int e) {
         int start = s;
         int end = e;
@@ -272,16 +319,46 @@ public class Arrays {
         }
     }
 
+    private static int[] printSubset (int start, int end, int[] nums) {
+        int adder;
+        int len;
+        if (start > end) {
+            adder = -1;
+            len = start - end + 1;
+        } else {
+            adder = 1;
+            len = end - start + 1;
+        }
+        int st = start;
+        int[] ans = new int[len];
+        for (int i = 0; i < len; i++) {
+            ans[i] = nums[st];
+            st = st + adder;
+        }
+        return ans;
+    }
+
+    private static int[] pickIndex (int[] nums, int pickIndex, int putIndex) {
+        int pickElement = nums[pickIndex];
+        for (int i = pickIndex + 1; i < putIndex; i++) {
+            nums[i - 1] = nums[i];
+        }
+        nums[putIndex] = pickElement;
+        return nums;
+    }
+
     public static void main (String[] args) {
         Scanner scanner = new Scanner(System.in);
-//        int n = scanner.nextInt();
-//        int[] nums = new int[n];
-//        for (int i = 0; i < n; i++) {
-//            nums[i] = scanner.nextInt();
-//        }
-//        int[] ans = frequentElements(nums);
-//        for (int num : ans) {
-//            System.out.print(num + " ");
-//        }
+        int n = scanner.nextInt();
+        int pickIndex = scanner.nextInt();
+        int putIndex = scanner.nextInt();
+        int[] nums = new int[n];
+        for (int i = 0; i < n; i++) {
+            nums[i] = scanner.nextInt();
+        }
+        int[] ans = pickIndex(nums, pickIndex, putIndex);
+        for (int num : ans) {
+            System.out.print(num + " ");
+        }
     }
 }
