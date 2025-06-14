@@ -35,7 +35,7 @@ public class Directory {
     }
 
     public Directory makeDirectory(String name) {
-        if (checkDirectoryExists(name)) {
+        if (checkDirectoryExists(name) != null) {
             return this;
         }
         Directory directory = new Directory(name, this);
@@ -44,47 +44,71 @@ public class Directory {
     }
 
     public Directory changeDirectory (String command, Directory root) {
-        if (command.equals(".")) {
-            return this;
-        } else if (command.equals("..")) {
-            return this.parent;
-        } else if (command.equals("/")) {
-            return root;
-        }
-        if (this.checkFileExists(command)) {
-            for (Directory dir : this.directories) {
-                if (dir.name.equals(command)) {
-                    return dir;
-                }
+        Directory directory = switch (command) {
+            case "." -> this;
+            case ".." -> this.parent;
+            case "/" -> root;
+            default -> this.checkDirectoryExists(command);
+        };
+        return directory;
+    }
+
+    private Directory findRoot () {
+        Directory dir = this;
+        return dir.parent == null ? dir : dir.findRoot();
+    }
+
+    public Directory moveDirectory (Directory srcDirectory) {
+        this.addSubDirectories(srcDirectory);
+        srcDirectory.setParent(this);
+        Directory parent = srcDirectory.getParent();
+        parent.removeSubDirectories(srcDirectory);
+        return this.changeDirectory(srcDirectory.name, this.findRoot());
+    }
+
+    public Directory moveFile (File srcFile) {
+        this.addFile(srcFile);
+        srcFile.setParent(this);
+        srcFile.getParent().removeFile(srcFile);
+        return this;
+    }
+
+    private Directory checkDirectoryExists (String name) {
+        for (Directory d : this.directories) {
+            if (d.name.equals(name)) {
+                return d;
             }
         }
         return null;
-    }
-
-//    public Directory moveDirectory (Directory srcDirectory) {
-//
-//    }
-
-    private boolean checkDirectoryExists (String name) {
-        for (Directory d : this.directories) {
-            if (d.name.equals(name)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     private void addSubDirectories(Directory dir) {
         this.directories.add(dir);
     }
 
-    public boolean checkFileExists (String name) {
+    private void removeSubDirectories (Directory dir) {
+        this.directories.remove(dir);
+    }
+
+    public void addFile (File file) {
+        this.files.add(file);
+    }
+
+    private void removeFile (File file) {
+        this.files.remove(file);
+    }
+
+    private void setParent(Directory parent) {
+        this.parent = parent;
+    }
+
+    public File checkFileExists (String name) {
         for (File f : this.files) {
             if (f.getName().equals(name)) {
-                return true;
+                return f;
             }
         }
-        return false;
+        return null;
     }
 
     public String buildPath(String parentName) {

@@ -37,12 +37,11 @@ public class Explorer {
     }
 
     public String createFile(String name, String content) {
-        if (fileRefs.containsKey(name)) {
-            if (currentDirectory.checkFileExists(name)) {
-                return "File with these name can't be created";
-            }
+        if (currentDirectory.checkFileExists(name) != null) {
+            return "File with these name can't be created";
         }
         File file = new File(name, currentDirectory, content);
+        currentDirectory.addFile(file);
         fileRefs.put(name, file);
         return file.getContent();
     }
